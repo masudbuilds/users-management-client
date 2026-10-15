@@ -11,17 +11,27 @@ import {
   TextArea,
   TextField,
 } from "@heroui/react";
+import { redirect } from "next/navigation";
 
 const AddUsers = () => {
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = {};
-    // Convert FormData to plain object
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
+    const data = Object.fromEntries(formData.entries());
+
+    const response = await fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
-    console.log("Form submitted successfully!", data);
+    const result = response.json();
+    console.log("After Submission", result);
+
+    if (result.success) {
+      redirect("/users");
+    }
   };
 
   return (
