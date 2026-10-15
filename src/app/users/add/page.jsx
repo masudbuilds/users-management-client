@@ -11,9 +11,11 @@ import {
   TextArea,
   TextField,
 } from "@heroui/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const AddUsers = () => {
+  const router = useRouter();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -26,11 +28,11 @@ const AddUsers = () => {
       },
       body: JSON.stringify(data),
     });
-    const result = response.json();
+    const result = await response.json();
     console.log("After Submission", result);
 
     if (result.success) {
-      redirect("/users");
+      router.replace("/users");
     }
   };
 
